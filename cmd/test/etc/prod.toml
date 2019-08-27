@@ -1,0 +1,15 @@
+# MySQL 配置
+[mysql]
+addr = "127.0.0.1:3306"
+username = ""
+password = ""
+charset = "utf8"
+dbname = ""
+#redis设置
+[redis]
+addr = ""
+password = ""
+
+#通用配置
+[common]
+log_dir ="/data/logs/other/"
