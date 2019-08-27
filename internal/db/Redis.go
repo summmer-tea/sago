@@ -2,8 +2,8 @@ package db
 
 import (
 	"fmt"
+	"gitee.com/xiawucha365/sago/internal/comm"
 	"github.com/garyburd/redigo/redis"
-	"sago/internal/comm"
 	"sync"
 	"time"
 )

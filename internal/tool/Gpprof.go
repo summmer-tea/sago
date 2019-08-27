@@ -3,7 +3,7 @@ package utils
 import (
 	"os"
 	"runtime/pprof"
-	"sago/internal/logger"
+	" gitee.com/xiawucha365/sago/internal/logger"
 )
 
 func CpuPprof() {

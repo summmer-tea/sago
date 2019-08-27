@@ -2,8 +2,8 @@ package pipe
 
 import (
 	"fmt"
-	"hotel_scripts/internal/logger"
-	utils "hotel_scripts/internal/tool"
+	" gitee.com/xiawucha365/sago/internal/logger"
+	utils " gitee.com/xiawucha365/sago/internal/tool"
 	"sync"
 	"time"
 )

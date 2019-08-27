@@ -3,10 +3,10 @@ package app
 import (
 	"flag"
 	"github.com/garyburd/redigo/redis"
-	"sago/internal/comm"
-	"sago/internal/db"
-	"sago/internal/logger"
-	tool "sago/internal/tool"
+	"gitee.com/xiawucha365/sago/internal/comm"
+	"gitee.com/xiawucha365/sago/internal/db"
+	"gitee.com/xiawucha365/sago/internal/logger"
+	tool " gitee.com/xiawucha365/sago/internal/tool"
 )
 
 const (

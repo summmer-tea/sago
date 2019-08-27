@@ -1,10 +1,10 @@
 package db
 
 import (
+	"gitee.com/xiawucha365/sago/internal/comm"
+	"gitee.com/xiawucha365/sago/internal/logger"
 	"github.com/go-xorm/xorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"sago/internal/comm"
-	"sago/internal/logger"
 	"sync"
 	"time"
 )

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	log "github.com/cihub/seelog"
 	"github.com/gookit/color"
-	"sago/internal/comm"
+	" gitee.com/xiawucha365/sago/internal/comm"
 )
 
 func Init(config *comm.Config) {
