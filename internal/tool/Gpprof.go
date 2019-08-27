@@ -1,9 +1,9 @@
 package utils
 
 import (
+	"gitee.com/xiawucha365/sago/internal/logger"
 	"os"
 	"runtime/pprof"
-	" gitee.com/xiawucha365/sago/internal/logger"
 )
 
 func CpuPprof() {
