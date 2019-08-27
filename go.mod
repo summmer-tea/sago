@@ -1,4 +1,4 @@
-module sago
+module gitee.com/xiawucha365/sago
 
 go 1.12
 
