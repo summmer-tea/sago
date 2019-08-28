@@ -1,8 +1,9 @@
 package main
-import ( 
-	_"hotel_scripts/internal/app"
+
+import (
+	"gitee.com/xiawucha365/sago"
 )
 
 func main() {
-
+	sago.Testing()
 }

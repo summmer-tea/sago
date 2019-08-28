@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	G_ENV_DEV  = "dev"
-	G_ENV_PROD = "prod"
+	GENV_CONST_DEV  = "dev"
+	GENV_CONST_PROD = "prod"
 )
 
 var (
@@ -44,10 +44,10 @@ func initEnv() {
 	flag.Parse()
 
 	//启动命令
-	if Env == G_ENV_PROD {
+	if Env == GENV_CONST_PROD {
 		etc_file = etc_dir + "/etc/prod.toml"
 	}
-	if Env == G_ENV_DEV {
+	if Env == GENV_CONST_DEV {
 		etc_file = "/Users/mfw/Documents/data/go/src/hotel_scripts/console/spider_worker/etc/dev.toml"
 	}
 
