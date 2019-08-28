@@ -7,7 +7,7 @@ import (
 
 var (
 	// 单例
-	G_config *Config
+	GConfig *Config
 )
 
 // 程序配置
@@ -54,7 +54,7 @@ func InitConfig(filename string) (err error) {
 		return err
 	}
 
-	G_config = &conf
+	GConfig = &conf
 
 	return
 }

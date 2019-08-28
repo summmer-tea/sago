@@ -20,9 +20,9 @@ func CreateMysqlDialect() *DbEngine {
 	once.Do(func() {
 		var err error
 		if MysqlEngine, err = xorm.NewEngine("mysql",
-			G_config.Mysql.Username+":"+G_config.Mysql.Password+
-				"@tcp("+G_config.Mysql.Addr+")/"+G_config.Mysql.Dbname+"?charset="+
-				G_config.Mysql.Charset+"&parseTime=True&loc=Local"); err != nil {
+			GConfig.Mysql.Username+":"+GConfig.Mysql.Password+
+				"@tcp("+GConfig.Mysql.Addr+")/"+GConfig.Mysql.Dbname+"?charset="+
+				GConfig.Mysql.Charset+"&parseTime=True&loc=Local"); err != nil {
 			logger.Error("mysqlconn", err)
 		}
 

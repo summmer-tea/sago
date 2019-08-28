@@ -61,7 +61,7 @@ func (p *WPool) Run() {
 					p.wg.Done()
 					<-p.limitChan
 					if err := recover(); err != nil {
-						Error("task error", err)
+						Log.Error("task error", err)
 					}
 
 					//p.runtimelog()
@@ -83,7 +83,7 @@ func (p *WPool) Run() {
 						case <-time.After(time.Duration(p.TimeOut) * time.Second):
 							//打印超时的任务id
 							//p.CountFail()
-							Warn(wr.GetTaskID(), "timeout")
+							Log.Warn(wr.GetTaskID(), "timeout")
 							goto ForEnd
 						}
 
@@ -112,7 +112,7 @@ func (p *WPool) Run() {
 func (p *WPool) runtask(wr WorkerInterface, timeout_ch chan interface{}) {
 	defer func() {
 		if err := recover(); err != nil {
-			Error("task error", err)
+			Log.Error("task error", err)
 		}
 	}()
 
@@ -158,7 +158,7 @@ func (p *WPool) Runtimelog() {
 	ttime := utils.MathDecimal(float64(time.Now().Unix() - p.TimeStart))
 	trange := utils.MathDecimal(float64(p.TotalNum) / ttime)
 	if p.Counter > 0 || p.CounterFail > 0 {
-		Sucess(fmt.Sprintln("runtime:总数|成功|失败:", p.TotalNum, "|", p.Counter, "|", p.CounterFail, "", "消耗时间:(", ttime, "s)", "平均:(", trange, "次/s)"))
+		Log.Sucess(fmt.Sprintln("runtime:总数|成功|失败:", p.TotalNum, "|", p.Counter, "|", p.CounterFail, "", "消耗时间:(", ttime, "s)", "平均:(", trange, "次/s)"))
 	}
 }
 

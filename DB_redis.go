@@ -17,16 +17,16 @@ type RedisDialect struct{}
 func (m *RedisDialect) RegisterDbConn() {
 
 	//配置项为空跳过
-	if G_config.Redis.Addr == "" {
+	if GConfig.Redis.Addr == "" {
 		return
 	}
 
 	redisConn = &redis.Pool{
 		//连接池控制
 		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial("tcp", G_config.Redis.Addr,
+			c, err := redis.Dial("tcp", GConfig.Redis.Addr,
 				redis.DialConnectTimeout(time.Second*30),
-				redis.DialPassword(G_config.Redis.Password))
+				redis.DialPassword(GConfig.Redis.Password))
 			if err != nil {
 				panic(err)
 			} else {

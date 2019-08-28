@@ -13,11 +13,11 @@ const (
 )
 
 var (
-	G_mysql *DbEngine
-	G_model *DbDialect
-	G_redis redis.Conn
-	Env     string
-	Debug   bool
+	GMysql *DbEngine
+	GModel *DbDialect
+	GRedis redis.Conn
+	Env    string
+	Debug  bool
 )
 
 func init() {
@@ -55,8 +55,8 @@ func initEnv() {
 		logger.Error(err)
 	}
 
-	G_config.Common.Env = Env
-	G_config.Common.Debug = Debug
+	GConfig.Common.Env = Env
+	GConfig.Common.Debug = Debug
 
 	initLog()
 
@@ -65,19 +65,19 @@ func initEnv() {
 
 func initMysql() {
 	//通用模式
-	G_mysql = CreateMysqlDialect()
+	GMysql = CreateMysqlDialect()
 	//自定义封装模式
-	G_model = MysqlDialect
+	GModel = MysqlDialect
 }
 
 func initRedis() {
-	if G_config.Redis.Addr == "" {
+	if GConfig.Redis.Addr == "" {
 		return
 	}
-	G_redis = createRedisDialect()
+	GRedis = createRedisDialect()
 }
 
 //日志初始化
 func initLog() {
-	logger.Init(G_config.Common.Logdir)
+	logger.Init(GConfig.Common.Logdir)
 }
