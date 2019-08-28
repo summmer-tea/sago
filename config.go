@@ -1,4 +1,4 @@
-package comm
+package sago
 
 import (
 	"github.com/BurntSushi/toml"

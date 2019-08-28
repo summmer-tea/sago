@@ -1,7 +1,6 @@
-package db
+package sago
 
 import (
-	"gitee.com/xiawucha365/sago/internal/comm"
 	"gitee.com/xiawucha365/sago/internal/logger"
 	"github.com/go-xorm/xorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -21,9 +20,9 @@ func CreateMysqlDialect() *DbEngine {
 	once.Do(func() {
 		var err error
 		if MysqlEngine, err = xorm.NewEngine("mysql",
-			comm.G_config.Mysql.Username+":"+comm.G_config.Mysql.Password+
-				"@tcp("+comm.G_config.Mysql.Addr+")/"+comm.G_config.Mysql.Dbname+"?charset="+
-				comm.G_config.Mysql.Charset+"&parseTime=True&loc=Local"); err != nil {
+			G_config.Mysql.Username+":"+G_config.Mysql.Password+
+				"@tcp("+G_config.Mysql.Addr+")/"+G_config.Mysql.Dbname+"?charset="+
+				G_config.Mysql.Charset+"&parseTime=True&loc=Local"); err != nil {
 			logger.Error("mysqlconn", err)
 		}
 

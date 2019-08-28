@@ -2,9 +2,9 @@ package logger
 
 import (
 	"fmt"
+	"gitee.com/xiawucha365/sago/internal/comm"
 	log "github.com/cihub/seelog"
 	"github.com/gookit/color"
-	" gitee.com/xiawucha365/sago/internal/comm"
 )
 
 func Init(config *comm.Config) {

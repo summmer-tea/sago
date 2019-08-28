@@ -1,4 +1,4 @@
-package db
+package sago
 
 import "github.com/go-xorm/xorm"
 
