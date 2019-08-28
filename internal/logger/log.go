@@ -2,13 +2,12 @@ package logger
 
 import (
 	"fmt"
-	"gitee.com/xiawucha365/sago/internal/comm"
 	log "github.com/cihub/seelog"
 	"github.com/gookit/color"
 )
 
-func Init(config *comm.Config) {
-	if logger, err := log.LoggerFromConfigAsBytes([]byte(getXml(config))); err != nil {
+func Init(logdir string) {
+	if logger, err := log.LoggerFromConfigAsBytes([]byte(getXml(logdir))); err != nil {
 		fmt.Println(err)
 	} else {
 		if err := log.ReplaceLogger(logger); err != nil {
@@ -37,7 +36,7 @@ func Flush(v ...interface{}) {
 	log.Flush()
 }
 
-func getXml(config *comm.Config) string {
+func getXml(logdir string) string {
 
 	//	return `<seelog type="asynctimer" asyncinterval="1" minlevel="debug" maxlevel="error">
 	//    <outputs formatid="main">
@@ -58,7 +57,7 @@ func getXml(config *comm.Config) string {
 	       <console/>
 	       <!-- 输出到文件，且不同于终端的日志格式 -->
 	       <splitter formatid="format1">
-	           <file path="` + config.Common.Logdir + `runtime.log"/>
+	           <file path="` + logdir + `runtime.log"/>
 	       </splitter>
 	   </outputs>
 	   <formats>

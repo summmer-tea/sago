@@ -1,12 +1,10 @@
-package app
+package sago
 
 import (
 	"flag"
-	"github.com/garyburd/redigo/redis"
-	"gitee.com/xiawucha365/sago/internal/comm"
-	"gitee.com/xiawucha365/sago/internal/db"
 	"gitee.com/xiawucha365/sago/internal/logger"
-	tool " gitee.com/xiawucha365/sago/internal/tool"
+	tool "gitee.com/xiawucha365/sago/internal/tool"
+	"github.com/garyburd/redigo/redis"
 )
 
 const (
@@ -15,8 +13,8 @@ const (
 )
 
 var (
-	G_mysql *db.DbEngine
-	G_model *db.DbDialect
+	G_mysql *DbEngine
+	G_model *DbDialect
 	G_redis redis.Conn
 	Env     string
 	Debug   bool
@@ -53,35 +51,33 @@ func initEnv() {
 		etc_file = "/Users/mfw/Documents/data/go/src/hotel_scripts/console/spider_worker/etc/dev.toml"
 	}
 
-	if err := comm.InitConfig(etc_file); err != nil {
+	if err := InitConfig(etc_file); err != nil {
 		logger.Error(err)
 	}
 
-	comm.G_config.Common.Env = Env
-	comm.G_config.Common.Debug = Debug
+	G_config.Common.Env = Env
+	G_config.Common.Debug = Debug
 
 	initLog()
-
-	//logger.Sucess("当前环境:", Env)
 
 	return
 }
 
 func initMysql() {
 	//通用模式
-	G_mysql = db.CreateMysqlDialect()
+	G_mysql = CreateMysqlDialect()
 	//自定义封装模式
-	G_model = db.MysqlDialect
+	G_model = MysqlDialect
 }
 
 func initRedis() {
-	if comm.G_config.Redis.Addr == "" {
+	if G_config.Redis.Addr == "" {
 		return
 	}
-	G_redis = db.CreateRedisDialect()
+	G_redis = CreateRedisDialect()
 }
 
 //日志初始化
 func initLog() {
-	logger.Init(comm.G_config)
+	logger.Init(G_config.Common.Logdir)
 }
