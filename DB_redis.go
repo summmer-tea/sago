@@ -1,7 +1,6 @@
 package sago
 
 import (
-	"fmt"
 	"github.com/garyburd/redigo/redis"
 	"sync"
 	"time"
@@ -37,34 +36,33 @@ func (m *RedisDialect) RegisterDbConn() {
 		},
 	}
 	//连接池数量
-	redisConn.MaxIdle = 10
-	redisConn.MaxActive = 10
-	redisConn.IdleTimeout = 60 * time.Second
+	redisConn.MaxIdle = 15
+	redisConn.MaxActive = 20
+	redisConn.IdleTimeout = 5 * time.Second
 
 }
 
-func (m *RedisDialect) GetDbConn() redis.Conn {
+//func (m *RedisDialect) getDbConn() redis.Conn {
+//
+//	return redisConn.Get()
+//}
 
-	return redisConn.Get()
-}
-
-func CreateRedisDialect() redis.Conn {
+func createRedisDialect() redis.Conn {
 	once_redis.Do(func() {
 		redisDialect.RegisterDbConn()
 	})
-	return redisDialect.GetDbConn()
+	return redisConn.Get()
 }
 
 func (m *RedisDialect) Set(key string, val string) (err error) {
 
-	rconn := redisDialect.GetDbConn()
-	defer func() {
-		if err := rconn.Close(); err != nil {
-			fmt.Println(err)
-		}
-	}()
-
-	if _, err := rconn.Do("SET", key, val); err != nil {
+	//rconn := redisConn.Get()
+	//defer func() {
+	//	if err := rconn.Close(); err != nil {
+	//		fmt.Println(err)
+	//	}
+	//}()
+	if _, err := redisConn.Get().Do("SET", key, val); err != nil {
 		return err
 	}
 
@@ -73,14 +71,14 @@ func (m *RedisDialect) Set(key string, val string) (err error) {
 
 func (m *RedisDialect) Get(key string) (reply interface{}, err error) {
 
-	rconn := redisDialect.GetDbConn()
-	defer func() {
-		if err := rconn.Close(); err != nil {
-			fmt.Println(err)
-		}
-	}()
+	//rconn := redisConn.Get()
+	//defer func() {
+	//	if err := rconn.Close(); err != nil {
+	//		fmt.Println(err)
+	//	}
+	//}()
 
-	if reply, err := redis.String(rconn.Do("GET", key)); err != nil {
+	if reply, err := redis.String(redisConn.Get().Do("GET", key)); err != nil {
 		panic(err)
 	} else {
 		return reply, err

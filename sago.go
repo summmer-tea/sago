@@ -74,7 +74,7 @@ func initRedis() {
 	if G_config.Redis.Addr == "" {
 		return
 	}
-	G_redis = CreateRedisDialect()
+	G_redis = createRedisDialect()
 }
 
 //日志初始化
