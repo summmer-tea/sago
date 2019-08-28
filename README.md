@@ -65,7 +65,7 @@ package main
 
 import (
 	"fmt"
-	"hotel_scripts/internal/app"
+	"gitee.com/xiawucha365/sago"
 	"strconv"
 )
 
@@ -97,8 +97,7 @@ package main
 
 import (
 	"fmt"
-	"hotel_scripts/internal/app"
-	"hotel_scripts/internal/pipe"
+	"gitee.com/xiawucha365/sago"
 	"time"
 )
 
