@@ -3,7 +3,10 @@ package sago
 import (
 	"fmt"
 	utils "gitee.com/xiawucha365/sago/internal/tool"
+	"github.com/parnurzeal/gorequest"
+	"net/http"
 	"strconv"
+	"time"
 )
 
 var Tool *Tooler
@@ -24,12 +27,27 @@ func (t *Tooler) RequestGet(url string) string {
 	return utils.Get(url)
 }
 
-func (t *Tooler) RequestPostJson(url string) string {
-	return utils.Get(url)
+func (t *Tooler) RequestPostJson(url string, json_input interface{}) (string, *http.Response, []error) {
+	if resp, body, errs := gorequest.New().Post(url).Type("json").Send(json_input).
+		Timeout(30 * time.Second).End(); errs != nil {
+		return "", resp, errs
+	} else {
+		return body, resp, nil
+	}
 }
 
-func (t *Tooler) RequestPostForm(url string) string {
-	return utils.Get(url)
+func (t *Tooler) RequestPostForm(url string, json_input interface{}) (string, *http.Response, []error) {
+	if resp, body, errs := gorequest.New().
+		Post(url).
+		//Set("Content-Type","application/x-www-form-urlencoded").
+		Type("form").
+		Send(json_input).
+		Timeout(30 * time.Second).End(); errs != nil {
+		return "", resp, errs
+	} else {
+		return body, resp, nil
+	}
+
 }
 
 func (t *Tooler) ConvStr2Int(str string) int {
