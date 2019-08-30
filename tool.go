@@ -184,6 +184,14 @@ func SelfPath() string {
 	return path
 }
 
+func (t *Tooler) GetCurrentPath() string {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		fmt.Println(err)
+	}
+	return strings.Replace(dir, "\\", "/", -1)
+}
+
 // SelfDir gets compiled executable file directory
 func (t *Tooler) SelfDir() string {
 	return filepath.Dir(SelfPath())
