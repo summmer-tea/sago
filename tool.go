@@ -1,6 +1,7 @@
 package sago
 
 import (
+	"encoding/json"
 	"fmt"
 	utils "gitee.com/xiawucha365/sago/internal/tool"
 	"github.com/parnurzeal/gorequest"
@@ -14,12 +15,20 @@ var Tool *Tooler
 type Tooler struct{}
 
 //文件相关
-func (t *Tooler) JsonEncode(v ...interface{}) (string, error) {
-	return utils.JsonEncode(v)
+func (t *Tooler) JsonEncode(v interface{}) (string, error) {
+
+	if by, error := json.Marshal(v); error != nil {
+		return "", error
+	} else {
+		return string(by), nil
+	}
 }
 
 func (t *Tooler) JsonDecode(data string, v interface{}) error {
-	return utils.JsonDecode(data, v)
+	if error := json.Unmarshal([]byte(data), v); error != nil {
+		return error
+	}
+	return nil
 }
 
 //http
