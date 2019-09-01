@@ -34,6 +34,17 @@ func CreateMysqlDialect() *DbEngine {
 		MysqlEngine.SetMaxOpenConns(20)
 		MysqlEngine.SetMaxIdleConns(10)
 		MysqlEngine.SetConnMaxLifetime(time.Second * 20)
+
+		//探活
+		go keepDbAlived(MysqlEngine)
 	})
 	return MysqlEngine
+}
+
+func keepDbAlived(engine *xorm.Engine) {
+	t := time.Tick(180 * time.Second)
+	for {
+		<-t
+		engine.Ping()
+	}
 }
