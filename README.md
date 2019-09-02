@@ -24,21 +24,16 @@ cli并行框架
 - go mod 安装
     - 需要安装 mod 包,安装成功后配置环境变量  
         - export GO111MODULE=on 
-        - export GOPROXY=https://goproxy.io
+        - export GOPROXY=https://goproxy.cn
 - IDE选择:建议使用goland版本 >= 2019.2,安装好后会自动检测并引入依赖,go mod是golang新出特性,旧版本不支持
 
 
-
-### 待完善
-- 并行组件引入context
-- 链路日志
-- 其他
 
 ### 新项目初始化
 - 1 利用脚手架工具生成一个新项目,如下
 ```go
 cd cmd
-./sago_cmd -pname 项目名 -table 表名
+./sago_cmd -pname 项目名 
 ```
 &emsp;&emsp;&emsp;table参数如不指定，则不生成model下的文件
 - 2 将生成的目录拷贝到console下面,结束
@@ -71,15 +66,15 @@ import (
 
 func main() {
 
-
+defer logger.flush()
 //使用mysql 
 var priceSeekoriItems []models.THotelPriceSeekori
-app.G_mysql.Select("id,ctime").Where("ctime > ? ", lastTime, ).Order("id asc ").Find(&priceSeekoriItems)
+app.GMysql.Select("id,ctime").Where("ctime > ? ", lastTime, ).Order("id asc ").Find(&priceSeekoriItems)
 
 //使用redis
-app.G_redis.Set("test_key","message")
+app.GRedis.Set("test_key","message")
 
-reply,err := app.G_redis.Get("test_key")
+reply,err := app.GRedis.Get("test_key")
 
 if(err != nill){
     panic(err)
