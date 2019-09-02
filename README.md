@@ -87,6 +87,8 @@ logger.Warn("hello,world")
 ```
 
 ####  并发相关 （参考spider_worker）
+注意:worker的定义需要满足interface中d约定,实现Task()与GetTaskID()两个方法,后面会支持匿名函数
+
 ```go
 package main
 
@@ -107,7 +109,7 @@ type worker struct {
 //要执行的任务列表
 var name_slices = []string{"001", "002", "003", "004", "005", "006", "007", "008", "009"}
 
-//单任务的业务逻辑代码
+//单任务的业务逻辑代码,
 func (m *worker) Task() error {
 
 	fmt.Println("job:" + m.name + " start")
@@ -115,12 +117,18 @@ func (m *worker) Task() error {
 	fmt.Println("job:" + m.name + " end")
 	return nil
 }
+//获取任务id
+func (m *worker) GetTaskID() interface{} {
+	return m.Name
+}
+
 
 //例子演示
 func main() {
 
 	logger.Warn("并发开始")
-	wool = pipe.NewWPool(4, len(name_slices))
+    //设置最大并发数与超时时间
+	wool = pipe.NewWPool(4, len(name_slices),30)
 	wool.Run()
 
 	for _, name := range name_slices {
