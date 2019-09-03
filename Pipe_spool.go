@@ -1,7 +1,7 @@
 package sago
 
 import (
-	"gitee.com/xiawucha365/sago/internal/logger"
+	"fmt"
 	utils "gitee.com/xiawucha365/sago/internal/tool"
 	"sync"
 	"time"
@@ -9,47 +9,56 @@ import (
 
 ///共享协程池
 type SPool struct {
-	work      chan WorkerInterface
-	wg        sync.WaitGroup
-	Counter   int
-	mutex     sync.Mutex
-	TimeStart int64
+	work          chan WorkerInterface
+	wg            sync.WaitGroup
+	TotalNum      int
+	Counter       int
+	CounterFail   int
+	mutexFail     sync.Mutex
+	mutexOk       sync.Mutex
+	TimeStart     int64
+	TimeOut       int
+	MaxGoroutines int
 }
 
 // 协程池
 func NewSPool(maxGoroutines int) *SPool {
 	p := SPool{
-		work: make(chan WorkerInterface),
+		MaxGoroutines: maxGoroutines,
+		work:          make(chan WorkerInterface),
 	}
 	//任务开始时间记录
 	p.TimeStart = time.Now().Unix()
+	return &p
+}
 
-	p.wg.Add(maxGoroutines)
+func (p *SPool) Run() {
+	p.wg.Add(p.MaxGoroutines)
 
-	for i := 0; i < maxGoroutines; i++ {
+	for i := 0; i < p.MaxGoroutines; i++ {
 		//协程池
 		go func() {
+
+			// 收尾工作 容灾
+			defer func() {
+				p.wg.Done()
+				if err := recover(); err != nil {
+					Log.Error("task error", err)
+				}
+			}()
 
 			for w := range p.work {
 				//消费 并 执行job里的任务
 				if err := w.Task(); err != nil {
-					logger.Error("task error", err)
+					p.CountFail()
+					panic(err)
 				} else {
 					//计数器
-					p.Count()
-
-					ttime := utils.MathDecimal(float64(time.Now().Unix() - p.TimeStart))
-					trange := utils.MathDecimal(float64(p.Counter) / ttime)
-					logger.Info("runtime:总数(", p.Counter, ")", "消耗时间:(", ttime, "s)", "平均:(", trange, "次/s)")
+					p.CountOk()
 				}
 			}
-
-			defer p.wg.Done()
-
 		}()
 	}
-
-	return &p
 }
 
 // 提交任务
@@ -65,12 +74,29 @@ func (p *SPool) Shutdown() {
 }
 
 //计数器
-func (p *SPool) Count() {
-	p.mutex.Lock()
-	//runtime.Gosched()
+func (p *SPool) CountOk() {
+	p.mutexOk.Lock()
 	p.Counter++
-	p.mutex.Unlock()
+	p.mutexOk.Unlock()
 
+}
+
+//计数器-失败
+func (p *SPool) CountFail() {
+	p.mutexFail.Lock()
+	p.CounterFail++
+	p.mutexFail.Unlock()
+
+}
+
+// log
+func (p *SPool) Runtimelog() {
+	//计数器
+	ttime := utils.MathDecimal(float64(time.Now().Unix() - p.TimeStart))
+	trange := utils.MathDecimal(float64(p.TotalNum) / ttime)
+	if p.Counter > 0 || p.CounterFail > 0 {
+		Log.Sucess(fmt.Sprintln("runtime:总数|成功|失败:", p.TotalNum, "|", p.Counter, "|", p.CounterFail, "", "消耗时间:(", ttime, "s)", "平均:(", trange, "次/s)"))
+	}
 }
 
 //

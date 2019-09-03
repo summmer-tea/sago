@@ -63,8 +63,6 @@ func (p *WPool) Run() {
 					if err := recover(); err != nil {
 						Log.Error("task error", err)
 					}
-
-					//p.runtimelog()
 				}()
 
 				//超时机制start
