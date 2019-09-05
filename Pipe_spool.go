@@ -39,26 +39,67 @@ func (p *SPool) Run() {
 		//协程池
 		go func() {
 
-			// 收尾工作 容灾
-			defer func() {
-				p.wg.Done()
-				if err := recover(); err != nil {
-					Log.Error("task error", err)
-				}
-			}()
-
 			for w := range p.work {
-				//消费 并 执行job里的任务
-				if err := w.Task(); err != nil {
-					p.CountFail()
-					panic(err)
-				} else {
-					//计数器
-					p.CountOk()
+				timeout_ch := make(chan interface{})
+
+				for {
+					select {
+					case <-timeout_ch:
+						//logger.Info(wr.GetTaskID(), ok)
+						goto ForEnd
+					case <-time.After(time.Duration(p.TimeOut) * time.Second):
+						//打印超时的任务id
+						//p.CountFail()
+						Log.Warn(w.GetTaskID(), "timeout")
+						goto ForEnd
+					}
+
 				}
+			ForEnd:
+
+				go func() {
+					p.runtask(w, timeout_ch)
+				}()
 			}
+
+			// 收尾工作 容灾
+			//defer func() {
+			//	p.wg.Done()
+			//	if err := recover(); err != nil {
+			//		Log.Error("task error", err)
+			//	}
+			//}()
+			//
+			//for w := range p.work {
+			//	//消费 并 执行job里的任务
+			//	if err := w.Task(); err != nil {
+			//		p.CountFail()
+			//		panic(err)
+			//	} else {
+			//		//计数器
+			//		p.CountOk()
+			//	}
+			//}
 		}()
 	}
+}
+
+func (p *SPool) runtask(wr WorkerInterface, timeout_ch chan interface{}) {
+	defer func() {
+		if err := recover(); err != nil {
+			Log.Error("task error", err)
+		}
+	}()
+
+	//执行job里的任务
+	err := wr.Task()
+	if err != nil {
+		p.CountFail()
+		panic(err)
+	} else {
+		p.CountOk()
+	}
+	timeout_ch <- "ok"
 }
 
 // 提交任务

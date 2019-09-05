@@ -1,48 +1,32 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"time"
 )
 
-func Run(task_id, sleeptime, timeout int) {
-	ch_run := make(chan string)
-	go run(task_id, sleeptime, ch_run)
-	for {
-		select {
-		case <-ch_run:
-			fmt.Sprintf("task id %d , over", task_id)
-		case <-time.After(time.Duration(timeout) * time.Second):
-			fmt.Sprintf("task id %d , timeout", task_id)
-
-		}
-	}
-
-}
-
-func run(task_id, sleeptime int, ch chan string) {
-
-	time.Sleep(time.Duration(sleeptime) * time.Second)
-	ch <- fmt.Sprintf("task id %d , sleep %d second", task_id, sleeptime)
-	return
-}
-
 func main() {
-	input := []int{3, 2, 1}
-	timeout := 2
-	//chs := make([]chan string, len(input))
-	startTime := time.Now()
-	fmt.Println("Multirun start")
-	for i, sleeptime := range input {
-		//chs[i] = make(chan string)
-		go Run(i, sleeptime, timeout)
+	ctx, cancel := context.WithTimeout(context.TODO(), time.Second*3)
+	defer cancel() // 防止任务比超时时间短导致资源未释放
+	// 启动协程
+	go task(ctx)
+	// 主协程需要等待，否则直接退出
+	time.Sleep(time.Second * 4)
+}
+
+func task(ctx context.Context) {
+	ch := make(chan struct{}, 0)
+	// 真正的任务协程
+	go func() {
+		// 模拟两秒耗时任务
+		time.Sleep(time.Second * 5)
+		ch <- struct{}{}
+	}()
+	select {
+	case <-ch:
+		fmt.Println("done")
+	case <-ctx.Done():
+		fmt.Println("timeout")
 	}
-
-	//for _, ch := range chs {
-	//	fmt.Println(<-ch)
-	//}
-	endTime := time.Now()
-	fmt.Printf("Multissh finished. Process time %s. Number of task is %d", endTime.Sub(startTime), len(input))
-	time.Sleep(100 * time.Second)
-
 }
