@@ -57,7 +57,7 @@ func getXml(logdir string) string {
 	       <console/>
 	       <!-- 输出到文件，且不同于终端的日志格式 -->
 	       <splitter formatid="format1">
-	           <file path="` + logdir + `"/>
+	           <file path="` + logdir + `runtime.log"/>
 	       </splitter>
 	   </outputs>
 	   <formats>
