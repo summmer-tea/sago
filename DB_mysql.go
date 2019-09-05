@@ -31,8 +31,8 @@ func CreateMysqlDialect() *DbEngine {
 		//连接数默认设置
 		//连接数默认设置
 
-		MysqlEngine.SetMaxOpenConns(20)
-		MysqlEngine.SetMaxIdleConns(10)
+		MysqlEngine.SetMaxOpenConns(120)
+		MysqlEngine.SetMaxIdleConns(100)
 		MysqlEngine.SetConnMaxLifetime(time.Second * 20)
 
 		//探活
